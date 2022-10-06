@@ -7,8 +7,14 @@ const Query = queryField('helloWorldNexus', {
   },
 });
 
-const nexusSchema = makeSchema({
-  types: [Query],
+const nexusSchemaPromise = new Promise((resolve) => {
+  setTimeout(() => {
+    resolve(
+      makeSchema({
+        types: [Query],
+      }),
+    );
+  }, 5000);
 });
 
-export { nexusSchema };
+export { nexusSchemaPromise };

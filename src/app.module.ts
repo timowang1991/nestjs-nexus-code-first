@@ -6,7 +6,8 @@ import { join } from 'path';
 import { HelloWorldModule } from './hello-world/hello-world.module';
 import { NexusModule } from './nexus/nexus.module';
 import { mergeSchemas } from '@graphql-tools/schema';
-import { nexusSchema } from './nexus/nexus.model';
+import { nexusSchemaPromise } from './nexus/nexus.model';
+import { GraphQLSchema } from 'graphql';
 
 @Module({
   imports: [
@@ -15,7 +16,9 @@ import { nexusSchema } from './nexus/nexus.model';
       playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      transformSchema: (schema) => {
+      transformSchema: async (schema) => {
+        const nexusSchema = (await nexusSchemaPromise) as GraphQLSchema;
+
         return mergeSchemas({
           schemas: [schema, nexusSchema],
         });
